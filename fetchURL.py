@@ -7,9 +7,9 @@ from bs4 import BeautifulSoup
 # 検索リストからURLを抽出する
 
 # アクセスするURL
-CSV = "data.csv"
+CSV = "url.csv"
 BASE = "https://h-navi.jp"
-PAGE = "/support_facility/tokyo"
+PAGE = "/support_facility/aichi"
 URL = BASE + PAGE
 
 # init csv file
@@ -64,5 +64,8 @@ def fetchPages(pageNum):
     n += 1
   return pageNum
 
-# num = getNumPages()
-# fetchPages(num)
+n = 1
+num = getNumPages()
+while n < num + 1:
+  fetchUrl(str(n))
+  n += 1

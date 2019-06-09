@@ -4,7 +4,8 @@ import csv
 import re
 from bs4 import BeautifulSoup
 
-CSV_FILE = "detail.csv"
+URL_CSV = "url.csv"
+CSV_FILE = "data.csv"
 
 # 文字変換
 def replace_str(s):
@@ -24,30 +25,35 @@ def fetchDetail(url, title, cat):
     soup = BeautifulSoup(instance, "html.parser")
 
     # テーブルを指定
-    table = soup.findAll("table", {"class":"facility-table"})[1]
-    rows = table.findAll("tr")
+    table = soup.findAll("table", {"class":"facility-table"})
+    if(table):
+        rows = table[1].findAll("tr")
+        with open(CSV_FILE, "a") as file:
+            writer = csv.writer(file)
+            headRow = []
+            newRow = [title, cat, '', '', '']
+            # csvRow = []
+            for row in rows:
+                th = replace_str(row.find("th").get_text())
+                td = replace_str(row.find("td").get_text())
 
-    with open(CSV_FILE, "a", encoding="utf_8_sig") as file:
-        writer = csv.writer(file)
-        headRow = []
-        newRow = [title, cat, '', '', '']
-        # csvRow = []
-        for row in rows:
-            th = replace_str(row.find("th").get_text())
-            td = replace_str(row.find("td").get_text())
+                if u'住所' in th:
+                    print title
+                    newRow[2] = td.encode("utf_8")
+                elif u'電話番号' in th:
+                    newRow[3] = td.encode("utf_8")
+                elif 'URL' in th:
+                    newRow[4] = td.encode("utf_8")
 
-            if u'住所' in th:
-                print title
-                newRow[2] = td.encode("utf_8")
-            elif u'電話番号' in th:
-                newRow[3] = td.encode("utf_8")
-            elif 'URL' in th:
-                newRow[4] = td.encode("utf_8")
+            # print newRow
+            writer.writerow(newRow)
+    else:
+        print "NG: " + title
 
-        # print newRow
-        writer.writerow(newRow)
 
-with open('data.csv', 'r') as f:
+
+
+with open(URL_CSV, 'r') as f:
     reader = csv.reader(f)
     header = next(reader)  # ヘッダーを読み飛ばしたい時
 
