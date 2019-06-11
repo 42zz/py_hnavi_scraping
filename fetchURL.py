@@ -9,7 +9,7 @@ from bs4 import BeautifulSoup
 # アクセスするURL
 CSV = "url.csv"
 BASE = "https://h-navi.jp"
-PAGE = "/support_facility/aichi"
+PAGE = "/support_facility/yamagata"
 URL = BASE + PAGE
 
 # init csv file

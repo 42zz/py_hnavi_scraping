@@ -26,27 +26,41 @@ def fetchDetail(url, title, cat):
 
     # テーブルを指定
     table = soup.findAll("table", {"class":"facility-table"})
-    if(table):
-        rows = table[1].findAll("tr")
-        with open(CSV_FILE, "a") as file:
-            writer = csv.writer(file)
-            headRow = []
-            newRow = [title, cat, '', '', '']
-            # csvRow = []
-            for row in rows:
-                th = replace_str(row.find("th").get_text())
-                td = replace_str(row.find("td").get_text())
+    phone = soup.select(".facility-card__telephone-number")
+    address = soup.select(".facility-head-menu__address")
 
-                if u'住所' in th:
-                    print title
-                    newRow[2] = td.encode("utf_8")
-                elif u'電話番号' in th:
-                    newRow[3] = td.encode("utf_8")
-                elif 'URL' in th:
-                    newRow[4] = td.encode("utf_8")
+    if(table or address or phone):
+        if(table):
+            rows = table[1].findAll("tr")
+            with open(CSV_FILE, "a") as file:
+                writer = csv.writer(file)
+                headRow = []
+                newRow = [title, cat, '', '', '']
+                # csvRow = []
+                for row in rows:
+                    th = replace_str(row.find("th").get_text())
+                    td = replace_str(row.find("td").get_text())
 
-            # print newRow
-            writer.writerow(newRow)
+                    if u'住所' in th:
+                        print title
+                        newRow[2] = td.encode("utf_8")
+                    elif u'電話番号' in th:
+                        newRow[3] = td.encode("utf_8")
+                    elif 'URL' in th:
+                        newRow[4] = td.encode("utf_8")
+
+                # print newRow
+                writer.writerow(newRow)
+        else:
+            with open(CSV_FILE, "a") as file:
+                writer = csv.writer(file)
+                headRow = []
+                print "OK2: " + title
+                address = replace_str(address[0].get_text()).encode("utf_8") if address else ""
+                phone = replace_str(phone[0].get_text()).encode("utf_8") if phone else ""
+                newRow = [title, cat, address, phone, '']
+                # print newRow
+                writer.writerow(newRow)
     else:
         print "NG: " + title
 
