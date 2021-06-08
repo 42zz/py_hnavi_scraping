@@ -2,6 +2,7 @@
 import urllib2
 import csv
 import re
+import time
 from bs4 import BeautifulSoup
 
 URL_CSV = "url.csv"
@@ -74,7 +75,8 @@ with open(URL_CSV, 'r') as f:
     for row in reader:
         # list = row.decode("string-escape")
         fetchDetail(row[0], row[1], row[2])
-        
+        time.sleep(1)
+
 
 # fetchDetail(url, title, cat)
 
